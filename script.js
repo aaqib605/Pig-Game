@@ -9,9 +9,13 @@ const buttonNewGameEl = document.querySelector(".btn--new");
 const buttonHoldEl = document.querySelector(".btn--hold");
 const playerOne = document.querySelector(".player--0");
 const playerTwo = document.querySelector(".player--1");
+const playerOneName = document.querySelector("#name--0");
+const playerTwoName = document.querySelector("#name--1");
 
 let currentScore = 0;
 let activePlayer = 1;
+let scorePlayerOne = 0;
+let scorePlayerTwo = 0;
 
 // Starting conditions
 diceEl.classList.add("hidden");
@@ -19,6 +23,8 @@ diceEl.classList.add("hidden");
 const resetScores = function () {
   scorePlayerOneEl.textContent = "0";
   scorePlayerTwoEl.textContent = "0";
+  currentScorePlayerOneEl.textContent = "0";
+  currentScorePlayerTwoEl.textContent = "0";
 };
 resetScores();
 
@@ -52,4 +58,44 @@ const diceRoll = function () {
   }
 };
 
+const handleHold = function () {
+  if (activePlayer === 1) {
+    scorePlayerOne += currentScore;
+    scorePlayerOneEl.textContent = scorePlayerOne;
+    currentScorePlayerOneEl.textContent = "0";
+    currentScore = 0;
+    if (scorePlayerOne >= 100) {
+      playerOneName.textContent = "🏆 Winner!";
+    } else {
+      playerOne.classList.remove("player--active");
+      playerTwo.classList.add("player--active");
+    }
+  } else if (activePlayer === 2) {
+    scorePlayerTwo += currentScore;
+    scorePlayerTwoEl.textContent = scorePlayerTwo;
+    currentScorePlayerTwoEl.textContent = "0";
+    currentScore = 0;
+    if (scorePlayerTwo >= 100) {
+      playerTwoName.textContent = "🏆 Winner!";
+    } else {
+      playerTwo.classList.remove("player--active");
+      playerOne.classList.add("player--active");
+    }
+  }
+
+  activePlayer = activePlayer === 1 ? 2 : 1;
+};
+
+const handleNewGame = function () {
+  resetScores();
+  diceEl.classList.add("hidden");
+  playerTwo.classList.remove("player--active");
+  playerOne.classList.add("player--active");
+  playerOneName.textContent = "Player 1";
+  playerTwoName.textContent = "Player 2";
+  activePlayer = 1;
+};
+
 buttonRollEl.addEventListener("click", diceRoll);
+buttonHoldEl.addEventListener("click", handleHold);
+buttonNewGameEl.addEventListener("click", handleNewGame);
