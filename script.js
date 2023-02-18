@@ -65,7 +65,9 @@ const handleHold = function () {
     currentScorePlayerOneEl.textContent = "0";
     currentScore = 0;
     if (scorePlayerOne >= 100) {
+      playerOne.classList.add("name", "player--winner");
       playerOneName.textContent = "🏆 Winner!";
+      diceEl.classList.add("hidden");
     } else {
       playerOne.classList.remove("player--active");
       playerTwo.classList.add("player--active");
@@ -76,7 +78,9 @@ const handleHold = function () {
     currentScorePlayerTwoEl.textContent = "0";
     currentScore = 0;
     if (scorePlayerTwo >= 100) {
+      playerTwo.classList.add("name", "player--winner");
       playerTwoName.textContent = "🏆 Winner!";
+      diceEl.classList.add("hidden");
     } else {
       playerTwo.classList.remove("player--active");
       playerOne.classList.add("player--active");
@@ -89,8 +93,9 @@ const handleHold = function () {
 const handleNewGame = function () {
   resetScores();
   diceEl.classList.add("hidden");
-  playerTwo.classList.remove("player--active");
+  playerTwo.classList.remove("player--active", "player--winner", "name");
   playerOne.classList.add("player--active");
+  playerOne.classList.remove("player--winner", "name");
   playerOneName.textContent = "Player 1";
   playerTwoName.textContent = "Player 2";
   activePlayer = 1;
