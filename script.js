@@ -26,6 +26,9 @@ const resetScores = function () {
   scorePlayerTwoEl.textContent = "0";
   currentScorePlayerOneEl.textContent = "0";
   currentScorePlayerTwoEl.textContent = "0";
+  currentScore = 0;
+  scorePlayerOne = 0;
+  scorePlayerTwo = 0;
 };
 resetScores();
 
