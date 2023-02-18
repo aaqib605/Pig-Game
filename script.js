@@ -16,6 +16,7 @@ let currentScore = 0;
 let activePlayer = 1;
 let scorePlayerOne = 0;
 let scorePlayerTwo = 0;
+let playingGame = true;
 
 // Starting conditions
 diceEl.classList.add("hidden");
@@ -30,67 +31,74 @@ resetScores();
 
 // Rolling Dice functionality
 const diceRoll = function () {
-  const randomDiceRoll = Math.floor(Math.random() * 6) + 1;
-  diceEl.classList.remove("hidden");
-  diceEl.setAttribute("src", `images/dice-${randomDiceRoll}.png`);
+  if (playingGame) {
+    const randomDiceRoll = Math.floor(Math.random() * 6) + 1;
+    diceEl.classList.remove("hidden");
+    diceEl.setAttribute("src", `images/dice-${randomDiceRoll}.png`);
 
-  if (randomDiceRoll != 1) {
-    if (activePlayer === 1) {
-      currentScore += randomDiceRoll;
-      currentScorePlayerOneEl.textContent = currentScore;
-    } else if (activePlayer === 2) {
-      currentScore += randomDiceRoll;
-      currentScorePlayerTwoEl.textContent = currentScore;
+    if (randomDiceRoll != 1) {
+      if (activePlayer === 1) {
+        currentScore += randomDiceRoll;
+        currentScorePlayerOneEl.textContent = currentScore;
+      } else if (activePlayer === 2) {
+        currentScore += randomDiceRoll;
+        currentScorePlayerTwoEl.textContent = currentScore;
+      }
+    } else {
+      if (activePlayer === 1) {
+        currentScore = 0;
+        currentScorePlayerOneEl.textContent = currentScore;
+        playerOne.classList.remove("player--active");
+        playerTwo.classList.add("player--active");
+      } else if (activePlayer === 2) {
+        currentScore = 0;
+        currentScorePlayerTwoEl.textContent = currentScore;
+        playerTwo.classList.remove("player--active");
+        playerOne.classList.add("player--active");
+      }
+      activePlayer = activePlayer === 1 ? 2 : 1;
     }
-  } else {
-    if (activePlayer === 1) {
-      currentScore = 0;
-      currentScorePlayerOneEl.textContent = currentScore;
-      playerOne.classList.remove("player--active");
-      playerTwo.classList.add("player--active");
-    } else if (activePlayer === 2) {
-      currentScore = 0;
-      currentScorePlayerTwoEl.textContent = currentScore;
-      playerTwo.classList.remove("player--active");
-      playerOne.classList.add("player--active");
-    }
-    activePlayer = activePlayer === 1 ? 2 : 1;
   }
 };
 
 const handleHold = function () {
-  if (activePlayer === 1) {
-    scorePlayerOne += currentScore;
-    scorePlayerOneEl.textContent = scorePlayerOne;
-    currentScorePlayerOneEl.textContent = "0";
-    currentScore = 0;
-    if (scorePlayerOne >= 100) {
-      playerOne.classList.add("name", "player--winner");
-      playerOneName.textContent = "🏆 Winner!";
-      diceEl.classList.add("hidden");
-    } else {
-      playerOne.classList.remove("player--active");
-      playerTwo.classList.add("player--active");
+  if (playingGame) {
+    if (activePlayer === 1) {
+      scorePlayerOne += currentScore;
+      scorePlayerOneEl.textContent = scorePlayerOne;
+      currentScorePlayerOneEl.textContent = "0";
+      currentScore = 0;
+      if (scorePlayerOne >= 10) {
+        playingGame = false;
+        playerOne.classList.add("name", "player--winner");
+        playerOneName.textContent = "🏆 Winner!";
+        diceEl.classList.add("hidden");
+      } else {
+        playerOne.classList.remove("player--active");
+        playerTwo.classList.add("player--active");
+      }
+    } else if (activePlayer === 2) {
+      scorePlayerTwo += currentScore;
+      scorePlayerTwoEl.textContent = scorePlayerTwo;
+      currentScorePlayerTwoEl.textContent = "0";
+      currentScore = 0;
+      if (scorePlayerTwo >= 10) {
+        playingGame = false;
+        playerTwo.classList.add("name", "player--winner");
+        playerTwoName.textContent = "🏆 Winner!";
+        diceEl.classList.add("hidden");
+      } else {
+        playerTwo.classList.remove("player--active");
+        playerOne.classList.add("player--active");
+      }
     }
-  } else if (activePlayer === 2) {
-    scorePlayerTwo += currentScore;
-    scorePlayerTwoEl.textContent = scorePlayerTwo;
-    currentScorePlayerTwoEl.textContent = "0";
-    currentScore = 0;
-    if (scorePlayerTwo >= 100) {
-      playerTwo.classList.add("name", "player--winner");
-      playerTwoName.textContent = "🏆 Winner!";
-      diceEl.classList.add("hidden");
-    } else {
-      playerTwo.classList.remove("player--active");
-      playerOne.classList.add("player--active");
-    }
-  }
 
-  activePlayer = activePlayer === 1 ? 2 : 1;
+    activePlayer = activePlayer === 1 ? 2 : 1;
+  }
 };
 
 const handleNewGame = function () {
+  playingGame = true;
   resetScores();
   diceEl.classList.add("hidden");
   playerTwo.classList.remove("player--active", "player--winner", "name");
